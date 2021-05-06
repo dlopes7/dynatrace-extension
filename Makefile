@@ -1,4 +1,4 @@
-VERSION ?= 0.0.5
+VERSION ?= 0.0.6
 IMG=quay.io/dlopes7/dt-extension
 
 docker-build: ## Build docker image with the manager.

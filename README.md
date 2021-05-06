@@ -8,7 +8,11 @@ It is not very helpful on its own, but it is used by the [Dynatrace Extensions O
 To run with docker:
 
 ```shell
-docker run --rm -e "DT_EXTENSION_NAME=rabbitmq" -e "DT_EXTENSION_LINK=http://my.server/custom.python.rabbitmq.zip" -v /:/mnt/root quay.io/dlopes7/dt-extension
+docker run --rm \
+-e "DT_EXTENSION_NAME=rabbitmq" \
+-e "DT_EXTENSION_LINK=http://my.server/custom.python.rabbitmq.zip" \
+-v /opt/dynatrace/oneagent/plugin_deployment:/plugin_deployment \
+quay.io/dlopes7/dt-extension
 ```
 
 To use in kubernetes please check the [operator docs](https://github.com/dlopes7/dynatrace-extensions-operator).

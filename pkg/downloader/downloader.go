@@ -42,7 +42,7 @@ func (e *ExtensionDownloader) getFileNameFromURL() (string, error) {
 func (e *ExtensionDownloader) Download() error {
 	e.log.Info("Starting download", "name", e.name, "link", e.link)
 
-	installPath := "/mnt/root/opt/dynatrace/oneagent/plugin_deployment"
+	installPath := "/plugin_deployment"
 	if _, err := os.Stat(installPath); os.IsNotExist(err) {
 		e.log.Error(err, "pluginDeploymentPath does not exist", "pluginDeploymentPath", installPath)
 		return err
@@ -52,7 +52,7 @@ func (e *ExtensionDownloader) Download() error {
 	if err != nil {
 		return err
 	}
-	downloadPath := fmt.Sprintf("/mnt/root/opt/dynatrace/oneagent/plugin_deployment/%s", fileName)
+	downloadPath := fmt.Sprintf("/%s/%s", installPath, fileName)
 
 	resp, err := http.Get(e.link)
 	if err != nil {
@@ -156,7 +156,7 @@ func (e *ExtensionDownloader) CheckIfDownloaded() bool {
 	if err != nil {
 		return false
 	}
-	path := fmt.Sprintf("/mnt/root/opt/dynatrace/oneagent/plugin_deployment/%s", fileName)
+	path := fmt.Sprintf("/plugin_deployment/%s", fileName)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		e.log.Info("path does not exist", "path", path)
 		return false
