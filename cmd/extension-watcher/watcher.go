@@ -39,8 +39,12 @@ func checkForever() error {
 				return err
 			}
 		}
-		log.Info(fmt.Sprintf("The extension was already downloaded successfully"))
-		time.Sleep(30 * time.Second)
+		log.Info(fmt.Sprintf("The extension was already downloaded successfully, extracting it"))
+		err := extDownloader.Extract()
+		if err != nil {
+			log.Error(err, fmt.Sprintf("Could not extract the files: %s", err))
+		}
+		time.Sleep(60 * time.Second)
 
 	}
 }

@@ -39,6 +39,26 @@ func (e *ExtensionDownloader) getFileNameFromURL() (string, error) {
 
 }
 
+func (e *ExtensionDownloader) Extract() error {
+
+	installPath := "/plugin_deployment"
+
+	fileName, err := e.getFileNameFromURL()
+	if err != nil {
+		return err
+	}
+	downloadPath := fmt.Sprintf("/%s/%s", installPath, fileName)
+	files, err := e.unzip(downloadPath, installPath)
+	if err != nil {
+		e.log.Error(err, "could not extract files", "installPath", installPath, "downloadPath", downloadPath)
+		return err
+	}
+	e.log.Info(fmt.Sprintf("Extracted %d files to %s", len(files), installPath))
+
+	return nil
+
+}
+
 func (e *ExtensionDownloader) Download() error {
 	e.log.Info("Starting download", "name", e.name, "link", e.link)
 
@@ -73,31 +93,12 @@ func (e *ExtensionDownloader) Download() error {
 		e.log.Error(err, "could not write to file", "pluginDeploymentPath", downloadPath)
 		return err
 	}
-
 	e.log.Info("downloaded the file", "pluginDeploymentPath", downloadPath)
-
-	files, err := e.unzip(downloadPath, installPath)
-	if err != nil {
-		e.log.Error(err, "could not extract files", "installPath", installPath, "downloadPath", downloadPath)
-		return err
-	}
-	e.log.Info(fmt.Sprintf("Extracted %d files to %s", len(files), installPath))
-
-	//pluginDeploymentPath := fmt.Sprintf("/opt/dynatrace/oneagent/plugin_deployment/%s", fileName)
-	//pluginDeploymentZip, err := os.Create(pluginDeploymentPath)
-	//if err != nil {
-	//	e.log.Error(err, "could not create pluginDeploymentPath", "pluginDeploymentPath", pluginDeploymentPath)
-	//	return err
-	//}
-	//defer pluginDeploymentZip.Close()
-	//_, err = io.Copy(out, pluginDeploymentZip)
-	//if err != nil {
-	//	e.log.Error(err, "could not copy file", "source", downloadPath, "destination", pluginDeploymentPath)
-	//}
 	return nil
 }
 
 func (e *ExtensionDownloader) unzip(src string, dest string) ([]string, error) {
+	e.log.Info(fmt.Sprintf("Attempting to extract from '%s' to '%s'", src, dest))
 
 	var filenames []string
 
@@ -162,5 +163,4 @@ func (e *ExtensionDownloader) CheckIfDownloaded() bool {
 		return false
 	}
 	return true
-
 }
